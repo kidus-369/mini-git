@@ -1,6 +1,7 @@
-#include<iostream>
+#include <iostream>
 
+#include "CLI.hpp"
 
-int main () {
-    return 0;
+int main(int argc, char* argv[]) {
+    return CLI::run(argc, argv);
 }
