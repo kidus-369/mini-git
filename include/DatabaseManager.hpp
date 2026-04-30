@@ -1,6 +1,7 @@
 #ifndef DATABASE_MANAGER_HPP
 #define DATABASE_MANAGER_HPP
 
+#include <iostream>
 #include <string>
 
 extern "C" {
@@ -30,6 +31,10 @@ public:
         
         int result = sqlite3_exec(this->DB, query.c_str(), nullptr, nullptr, nullptr);
         return (result == SQLITE_OK);
+    }
+
+    sqlite3* getHandle() const {
+        return this->DB;
     }
 
 private:
