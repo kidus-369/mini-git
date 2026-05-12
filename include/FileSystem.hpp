@@ -79,11 +79,7 @@ namespace FileSystem {
     std::string path = COMMITS_FOLDER + "/" + commitID;
     return create_folder(path);
 }
-<<<<<<< HEAD
-FileSystemError* copy_file(const fs::path& source, const fs::path& destination) {
-=======
 FileSystemError* copy_file_safe(const fs::path& source, const fs::path& destination) {
->>>>>>> 625064d (fix: fix naming conflict on file-system and connect to db only when there is a known cli command)
     FileSystemError* error = new FileSystemError;
     error->type = FileErrorType::None;
     error->path = source.string();
@@ -152,11 +148,7 @@ FileSystemError* snapshot(const std::string& commitID) {
         }
     } 
     else {
-<<<<<<< HEAD
-        FileSystemError* copyErr = copy_file(entry.path(), destination);
-=======
         FileSystemError* copyErr = copy_file_safe(entry.path(), destination);
->>>>>>> 625064d (fix: fix naming conflict on file-system and connect to db only when there is a known cli command)
         if (copyErr->type != FileErrorType::None) {
             return copyErr;
         }
@@ -216,11 +208,7 @@ FileSystemError* restore(const std::string& commitID) {
             return error;
         }
     } else {
-<<<<<<< HEAD
-        FileSystemError* copyErr = copy_file(entry.path(), destination);
-=======
         FileSystemError* copyErr = copy_file_safe(entry.path(), destination);
->>>>>>> 625064d (fix: fix naming conflict on file-system and connect to db only when there is a known cli command)
 
         if (copyErr->type != FileErrorType::None) {
             return copyErr;

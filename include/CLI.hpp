@@ -21,7 +21,7 @@ namespace CLI {
         cout<<"\n minigit- A Simple Version Control System \n";
         cout<<"Commands:\n";
         cout<<"minigit init     -initialize a new repository\n";
-        cout<<"minigit commit -m\"msg\" -save a snapshot of your files\n";
+        cout<<"minigit commit -m\"msg\" [--author \"name\"] -save a snapshot of your files\n";
         cout<<"minigit log      -view commit history\n";
         cout<<"minigit restore <id>    -restore files from a commit\n"; 
         cout<<"minigit help     -show this menu\n";
@@ -60,25 +60,49 @@ namespace CLI {
                 return;
             }
 
-            if(argc < 4){
-                cout<<"Error: commit requires a messsage. \n";
-                cout<<"How to use: minigit commit -m\"your message\"\n";
-                return;
-            }   
-        string flag  = argv[2];
-        if (flag!="-m"){
-            cout<<"Error unknown flag"<<flag<<endl;
-            cout<<"How to use: minigit commit -m\"your message\"\n";
-            return;
-        }
+            string message;
+            string author;
+            bool hasMessage = false;
 
-        string message = argv[3];
+            for (int index = 2; index < argc; ++index) {
+                string flag = argv[index];
+
+                if (flag == "-m") {
+                    if (index + 1 >= argc) {
+                        cout << "Error: commit requires a messsage. \n";
+                        cout << "How to use: minigit commit -m\"your message\" [--author \"name\"]\n";
+                        return;
+                    }
+
+                    message = argv[++index];
+                    hasMessage = true;
+                } else if (flag == "--author") {
+                    if (index + 1 >= argc) {
+                        cout << "Error: --author requires a value.\n";
+                        cout << "How to use: minigit commit -m\"your message\" [--author \"name\"]\n";
+                        return;
+                    }
+
+                    author = argv[++index];
+                } else {
+                    cout << "Error unknown flag" << flag << endl;
+                    cout << "How to use: minigit commit -m\"your message\" [--author \"name\"]\n";
+                    return;
+                }
+            }
+
+            if (!hasMessage) {
+                cout << "Error: commit requires a messsage. \n";
+                cout << "How to use: minigit commit -m\"your message\" [--author \"name\"]\n";
+                return;
+            }
+
         string commitID = Utils::generate_alphanumeric(8);
         FileSystem::snapshot(commitID);      
         CommitHandler::Commit commit;
         commit.id        = commitID;
         commit.message   = message;
-        commit.author    = "Unknown";
+        commit.author    = author;
         commit.timestamp = Utils::get_db_iso_string(); 
         
         CommitHandler::CommitResponse result = CommitHandler::handleCommit(db, commit);
