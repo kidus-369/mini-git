@@ -1,6 +1,7 @@
 #ifndef FILESYSTEM_HPP
 #define FILESYSTEM_HPP
 
+#include <fstream>
 #include <string>
 #include <filesystem>
 
@@ -100,6 +101,17 @@ FileSystemError* copy_file_safe(const fs::path& source, const fs::path& destinat
 
     return error;
 }
+
+    bool write_text_file(const std::string& filePath, const std::string& content) {
+        std::ofstream out(filePath);
+        if (!out.is_open()) {
+            return false;
+        }
+
+        out << content;
+        return true;
+    }
+
 FileSystemError* snapshot(const std::string& commitID) {
   if (commitID.empty()) {
     FileSystemError* error = new FileSystemError;

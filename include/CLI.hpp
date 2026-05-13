@@ -22,7 +22,7 @@ namespace CLI {
         cout<<"Commands:\n";
         cout<<"minigit init     -initialize a new repository\n";
         cout<<"minigit commit -m\"msg\" [--author \"name\"] -save a snapshot of your files\n";
-        cout<<"minigit log      -view commit history\n";
+        cout<<"minigit log [--save file] -view or save commit history\n";
         cout<<"minigit restore <id>    -restore files from a commit\n"; 
         cout<<"minigit help     -show this menu\n";
         cout<<"\n";
@@ -125,7 +125,25 @@ namespace CLI {
               return;
           }
            
-          CommitHandler::handleLog(db); 
+          if (argc == 2) {
+              CommitHandler::handleLog(db);
+          } else if (argc == 4 && string(argv[2]) == "--save") {
+              vector<CommitHandler::Commit> commits = CommitHandler::fetchCommits(db, CommitHandler::QueryBuilder::selectAllCommits());
+
+              string logContent;
+              for (const auto& commit : commits) {
+                  logContent += commit.id + " | " + commit.parent_id + " | " + commit.author + " | " + commit.timestamp + " | " + commit.message + "\n";
+              }
+
+              if (FileSystem::write_text_file(argv[3], logContent)) {
+                  cout << "Log saved to " << argv[3] << "\n";
+              } else {
+                  cout << "Error: could not open file for writing.\n";
+              }
+          } else {
+              cout << "Error: invalid log usage.\n";
+              cout << "How to use: minigit log [--save file]\n";
+          }
        
         }else if(command=="restore"){ 
 
