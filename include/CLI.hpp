@@ -21,8 +21,9 @@ namespace CLI {
         cout<<"\n minigit- A Simple Version Control System \n";
         cout<<"Commands:\n";
         cout<<"minigit init     -initialize a new repository\n";
-        cout<<"minigit commit -m\"msg\" [--author \"name\"] -save a snapshot of your files\n";
-        cout<<"minigit log [--save file] -view or save commit history\n";
+        cout<<"minigit commit -m \"msg\" [--author \"name\"] -save a snapshot of your files\n";
+        cout<<"minigit log - view commit history in terminal\n";
+         cout<<"minigit log --save file - save commit history to a text file\n";
         cout<<"minigit restore <id>    -restore files from a commit\n"; 
         cout<<"minigit help     -show this menu\n";
         cout<<"\n";
@@ -104,11 +105,11 @@ namespace CLI {
         commit.message   = message;
         commit.author    = author;
         commit.timestamp = Utils::get_db_iso_string(); 
-        
+
         CommitHandler::CommitResponse result = CommitHandler::handleCommit(db, commit);
 
             if(result.success){
-                cout<<"Snapshot saved. Commit ID: "<<commitID<<"\n";
+                cout<<"success your work has been saved to the database. Commit ID: "<<commitID<<"\n";
             }else{
                 cout<<"Error: "<<result.message<<"\n";
             }
